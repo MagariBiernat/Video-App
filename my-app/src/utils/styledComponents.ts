@@ -48,7 +48,7 @@ export const ListAddedMovies_DivWrapper = styled.div`
         flex-basis: 50%;
       }
 
-      @media (max-width: 830px) {
+      @media (max-width: 905px) {
         flex-basis: 75%;
       }
     }

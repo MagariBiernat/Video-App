@@ -52,6 +52,13 @@ const searchAction =
 
               throw new Error()
             })
+            .then((response) => {
+              if (response.items.length === 0) {
+                throw new Error()
+              }
+
+              return response
+            })
             .then((res) =>
               dispatch({
                 type: SUCCESS_SEARCH,

@@ -20,20 +20,31 @@ type typeOfAction =
   | typeof MARK_AS_FAVOURITE
   | typeof UNMARK_AS_FAVOURITE
   | typeof CLEAR_ALL
-type typeOfPayload = videoInterface
+// type typeOfPayload = videoInterface
 
 const moviesReducer = (
   state: savedMoviesType = initialState,
-  action: ActionType<typeOfAction, typeOfPayload>
+  action: ActionType<typeOfAction, any>
 ) => {
   switch (action.type) {
     case SAVE_MOVIE:
-      if (
-        state.filter((item) => item.url === action?.payload?.url).length > 0
-      ) {
-        return state
+      const movieAlreadyExists = state.indexOf(action.payload) > -1
+
+      let copyState = state.slice()
+
+      if (movieAlreadyExists) {
+        copyState = copyState.filter((item) => item !== action.payload)
+        copyState.push({ ...action.payload, alreadyAdded: true })
+      } else {
+        copyState.push(action.payload)
       }
-      return [...state, action.payload]
+
+      return copyState
+    case REMOVE_MOVIE:
+      return [
+        ...state.slice(0, action.payload),
+        ...state.slice(action.payload + 1),
+      ]
 
     case CLEAR_ALL:
       return initialState

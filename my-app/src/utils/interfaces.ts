@@ -11,6 +11,7 @@ export interface videoInterface {
   favourite: boolean
   typeOfService: typeOfService
   data: vimeoInterface | ItemYoutubeMovieInterface
+  dateAdded: string
 }
 
 export interface searchReducerInterface {
@@ -18,7 +19,8 @@ export interface searchReducerInterface {
   typeofService: typeOfService
   success: boolean
   loading: boolean
+  // alreadyAdded: boolean
   data: ItemYoutubeMovieInterface | vimeoInterface | {} | any
 }
 
-export type savedMoviesType = Array<videoInterface> | []
+export type savedMoviesType = Array<videoInterface>

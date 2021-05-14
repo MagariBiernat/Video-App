@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import SearchResultMovie from "../components/searchResultMovie"
 import searchAction from "../redux/actons/searchAction"
@@ -6,9 +6,11 @@ import { RootState } from "../redux/reducers/rootReducer"
 import { InputGroup, InputGroupAddon, Button, Input, Spinner } from "reactstrap"
 import { MainPageWrapper } from "../utils/styledComponents"
 import ListAddedMovies from "../components/ListAddedMovies"
+import { CSSTransition } from "react-transition-group"
 
 function MainPage() {
   const [searchValue, setSearchValue] = useState<string>("")
+  const [showTrans, setShowTrans] = useState<boolean>(true)
   const movie = useSelector((state: RootState) => state.search)
   const error = useSelector((state: RootState) => state.errors)
   const dispatch = useDispatch()
@@ -42,10 +44,19 @@ function MainPage() {
           color="primary"
         />
       ) : (
-        <>
-          {error && <h2>Error loading</h2>}
-          {movie?.success && <SearchResultMovie movie={movie} />}
-        </>
+        <CSSTransition
+          in={movie?.success}
+          timeout={300}
+          classNames="item"
+          unmountOnExit
+          onEnter={() => setShowTrans(false)}
+          onExited={() => setShowTrans(true)}
+        >
+          <>
+            {error && <h2>Error loading</h2>}
+            {movie?.success && <SearchResultMovie movie={movie} />}
+          </>
+        </CSSTransition>
       )}
       <ListAddedMovies />
     </MainPageWrapper>
