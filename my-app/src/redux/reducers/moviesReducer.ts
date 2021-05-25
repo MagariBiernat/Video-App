@@ -1,4 +1,4 @@
-import { savedMoviesType, videoInterface } from "../../utils/interfaces"
+import { savedMoviesType } from "../../utils/interfaces"
 import {
   ActionType,
   CLEAR_ALL,
@@ -28,22 +28,34 @@ const moviesReducer = (
 ) => {
   switch (action.type) {
     case SAVE_MOVIE:
-      const movieAlreadyExists = state.indexOf(action.payload) > -1
-
-      let copyState = state.slice()
-
-      if (movieAlreadyExists) {
-        copyState = copyState.filter((item) => item !== action.payload)
-        copyState.push({ ...action.payload, alreadyAdded: true })
-      } else {
-        copyState.push(action.payload)
+      if (
+        state.filter((item) => item.url === action?.payload?.url).length > 0
+      ) {
+        return state
       }
-
-      return copyState
+      return [...state, action.payload]
     case REMOVE_MOVIE:
       return [
         ...state.slice(0, action.payload),
         ...state.slice(action.payload + 1),
+      ]
+    case MARK_AS_FAVOURITE:
+      const indexOfElement = state.findIndex(
+        (item) => item.url === action.payload
+      )
+
+      return [
+        ...state.slice(0, indexOfElement),
+        { ...state[indexOfElement], favourite: true },
+        ...state.slice(indexOfElement + 1),
+      ]
+    case UNMARK_AS_FAVOURITE:
+      const index = state.findIndex((item) => item.url === action.payload)
+
+      return [
+        ...state.slice(0, index),
+        { ...state[index], favourite: false },
+        ...state.slice(index + 1),
       ]
 
     case CLEAR_ALL:

@@ -1,5 +1,5 @@
 import vimeoInterface from "./vimeoInterface"
-import youtubeInterface, { ItemYoutubeMovieInterface } from "./youtubeInterface"
+import { ItemYoutubeMovieInterface } from "./youtubeInterface"
 
 export const Youtube = "Youtube"
 export const Vimeo = "Vimeo"

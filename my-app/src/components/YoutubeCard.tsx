@@ -1,5 +1,6 @@
 import React from "react"
 import { useDispatch } from "react-redux"
+import { AiOutlineHeart as FavouriteIcon } from "react-icons/ai"
 
 import {
   Card,
@@ -7,28 +8,34 @@ import {
   CardText,
   CardBody,
   CardTitle,
-  CardSubtitle,
   Button,
 } from "reactstrap"
-import { REMOVE_MOVIE } from "../redux/types"
+import {
+  MARK_AS_FAVOURITE,
+  REMOVE_MOVIE,
+  UNMARK_AS_FAVOURITE,
+} from "../redux/types"
 import { ItemYoutubeMovieInterface } from "../utils/youtubeInterface"
+import { Youtube } from "../utils/interfaces"
 
 interface IProps {
   movie: ItemYoutubeMovieInterface
-  searchValue: string
   url: string
   handleAddMovie?: () => void
   saved?: boolean
   index?: number
+  favourite?: boolean
+  toggleMovieModal: (movieUrl?: string, type?: string) => void
 }
 
 const YoutubeCard: React.FC<IProps> = ({
   movie,
-  searchValue,
   url,
   handleAddMovie,
   saved,
   index,
+  favourite,
+  toggleMovieModal,
 }) => {
   const dispatch = useDispatch()
 
@@ -39,37 +46,54 @@ const YoutubeCard: React.FC<IProps> = ({
     })
   }
 
+  const handleFavourite = () => {
+    if (!favourite) {
+      dispatch({ type: MARK_AS_FAVOURITE, payload: url })
+    } else {
+      dispatch({ type: UNMARK_AS_FAVOURITE, payload: url })
+    }
+  }
+
   return (
     <div style={{ marginTop: "20px" }}>
-      {/* {!saved ? (
-        <p className="text-center m-4">
-          <strong>This is search's result for</strong> <br /> <br />
-          {searchValue}
-        </p>
-      ) : null} */}
       <div>
         <Card
           style={{
             maxWidth: "400px",
             padding: "8px",
-            minHeight: "480px",
+            height: "540px",
+
             minWidth: "380px",
           }}
           className="flex flex-col justify-between"
         >
-          <CardImg
-            top
-            className="cursor-pointer maxResolution"
-            // width={movie.snippet.thumbnails.high.width}
-            // height={movie.snippet.thumbnails.medium.height}
-            src={movie.snippet.thumbnails.high.url}
-            alt="Card image cap"
-            onClick={() => window.open(url, "_blank")}
-          />
+          {saved ? (
+            <CardImg
+              top
+              className="cursor-pointer maxResolution"
+              // width={movie.snippet.thumbnails.high.width}
+              // height={movie.snippet.thumbnails.medium.height}
+              src={movie.snippet.thumbnails.high.url}
+              alt="Card image cap"
+              onClick={() => toggleMovieModal(movie.id, Youtube)}
+            />
+          ) : (
+            <CardImg
+              top
+              className="cursor-pointer maxResolution"
+              // width={movie.snippet.thumbnails.high.width}
+              // height={movie.snippet.thumbnails.medium.height}
+              src={movie.snippet.thumbnails.high.url}
+              alt="Card image cap"
+              onClick={() => window.open(url, "_blank")}
+            />
+          )}
+
           <CardBody className="flex flex-col justify-between">
             <CardTitle tag="h6" className=" text-primary cursor-pointer">
               <a
                 target="_blank"
+                rel="noreferrer"
                 href={`https://www.youtube.com/channel/${movie.snippet.channelId}`}
               >
                 by {movie.snippet.channelTitle}
@@ -94,7 +118,19 @@ const YoutubeCard: React.FC<IProps> = ({
                   >
                     Remove movie
                   </Button>
-                  <Button color="success"> Favourite</Button>
+                  <FavouriteIcon
+                    style={
+                      favourite
+                        ? {
+                            fill: "red",
+                            height: " 32px",
+                            width: "32px",
+                            color: "red",
+                          }
+                        : { height: " 32px", width: "32px" }
+                    }
+                    onClick={handleFavourite}
+                  />
                 </div>
               )}
             </div>
@@ -105,4 +141,4 @@ const YoutubeCard: React.FC<IProps> = ({
   )
 }
 
-export default YoutubeCard
+export default React.memo(YoutubeCard)

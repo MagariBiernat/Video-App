@@ -8,7 +8,6 @@ const errorsReducer = (
   state: boolean = initialState,
   action: ActionType<typeOfAction, null>
 ) => {
-  console.log(action)
   switch (action.type) {
     case ERROR_FETCHING_VIDEO:
       return true

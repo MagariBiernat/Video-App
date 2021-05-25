@@ -28,6 +28,19 @@ export const ListAddedMovies_DivWrapper = styled.div`
     letter-spacing: 2px;
   }
 
+  > .listAdded-Options {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 15px auto 0;
+  }
+
+  > h2 {
+    text-align: center;
+  }
+
   > div {
     display: flex;
     flex-wrap: wrap;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import SearchResultMovie from "../components/searchResultMovie"
 import searchAction from "../redux/actons/searchAction"
@@ -6,15 +6,13 @@ import { RootState } from "../redux/reducers/rootReducer"
 import { InputGroup, InputGroupAddon, Button, Input, Spinner } from "reactstrap"
 import { MainPageWrapper } from "../utils/styledComponents"
 import ListAddedMovies from "../components/ListAddedMovies"
-import { CSSTransition } from "react-transition-group"
+import { CLEAR_ERRORS, CLEAR_SEARCH } from "../redux/types"
 
 function MainPage() {
   const [searchValue, setSearchValue] = useState<string>("")
-  const [showTrans, setShowTrans] = useState<boolean>(true)
   const movie = useSelector((state: RootState) => state.search)
   const error = useSelector((state: RootState) => state.errors)
   const dispatch = useDispatch()
-  console.log(movie.success, error)
 
   const handleSearchForm = (event: React.FormEvent) => {
     event.preventDefault()
@@ -23,9 +21,16 @@ function MainPage() {
       dispatch(searchAction(searchValue))
     }
   }
+
+  const handleResetForm = (event: React.FormEvent) => {
+    setSearchValue("")
+    dispatch({ type: CLEAR_SEARCH })
+    dispatch({ type: CLEAR_ERRORS })
+  }
+
   return (
     <MainPageWrapper>
-      <form onSubmit={handleSearchForm}>
+      <form onSubmit={handleSearchForm} onReset={handleResetForm}>
         <InputGroup style={{ width: "100%" }}>
           <Input
             style={{ width: "70%" }}
@@ -36,6 +41,11 @@ function MainPage() {
             <Button color="primary">Search</Button>
           </InputGroupAddon>
         </InputGroup>
+        {searchValue.length > 0 && (
+          <Button style={{ marginTop: "20px" }} color="primary" type="reset">
+            Clear
+          </Button>
+        )}
       </form>
       {movie.loading ? (
         <Spinner
@@ -44,19 +54,10 @@ function MainPage() {
           color="primary"
         />
       ) : (
-        <CSSTransition
-          in={movie?.success}
-          timeout={300}
-          classNames="item"
-          unmountOnExit
-          onEnter={() => setShowTrans(false)}
-          onExited={() => setShowTrans(true)}
-        >
-          <>
-            {error && <h2>Error loading</h2>}
-            {movie?.success && <SearchResultMovie movie={movie} />}
-          </>
-        </CSSTransition>
+        <>
+          {error && <h2>Error loading</h2>}
+          {movie?.success && <SearchResultMovie movie={movie} />}
+        </>
       )}
       <ListAddedMovies />
     </MainPageWrapper>

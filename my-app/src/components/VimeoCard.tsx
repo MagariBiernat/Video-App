@@ -1,32 +1,29 @@
 import React from "react"
 import { useDispatch } from "react-redux"
+import { AiOutlineHeart as FavouriteIcon } from "react-icons/ai"
 
+import { Card, CardImg, CardBody, CardTitle, Button } from "reactstrap"
 import {
-  Card,
-  CardImg,
-  CardText,
-  CardBody,
-  CardTitle,
-  CardSubtitle,
-  Button,
-} from "reactstrap"
-import { REMOVE_MOVIE } from "../redux/types"
+  MARK_AS_FAVOURITE,
+  REMOVE_MOVIE,
+  UNMARK_AS_FAVOURITE,
+} from "../redux/types"
 import VimeoInterface from "../utils/vimeoInterface"
 interface IProps {
   movie: VimeoInterface
-  searchValue: string
   url: string
   handleAddMovie?: () => void
   saved?: boolean
   index?: number
+  favourite?: boolean
 }
 const VimeoCard: React.FC<IProps> = ({
   movie,
-  searchValue,
   url,
   handleAddMovie,
   saved,
   index,
+  favourite,
 }) => {
   const dispatch = useDispatch()
 
@@ -37,11 +34,25 @@ const VimeoCard: React.FC<IProps> = ({
     })
   }
 
+  const handleFavourite = () => {
+    if (!favourite) {
+      dispatch({ type: MARK_AS_FAVOURITE, payload: url })
+    } else {
+      dispatch({ type: UNMARK_AS_FAVOURITE, payload: url })
+    }
+  }
+
   return (
-    <div style={{ marginTop: "50px" }}>
+    <div style={{ marginTop: "20px" }}>
       <div>
         <Card
-          style={{ maxWidth: "400px", padding: "8px", height: "480px" }}
+          style={{
+            maxWidth: "400px",
+            padding: "8px",
+            height: "540px",
+
+            minWidth: "380px",
+          }}
           className="flex flex-col justify-between"
         >
           <CardImg
@@ -56,7 +67,7 @@ const VimeoCard: React.FC<IProps> = ({
           />
           <CardBody className="flex flex-col justify-between">
             <CardTitle tag="h6" className=" text-primary cursor-pointer ">
-              <a target="_blank" href={`${movie.user.link}`}>
+              <a target="_blank" rel="noreferrer" href={`${movie.user.link}`}>
                 by {movie.user.name}
               </a>
             </CardTitle>
@@ -74,7 +85,19 @@ const VimeoCard: React.FC<IProps> = ({
                   >
                     Remove movie
                   </Button>
-                  <Button color="success"> Favourite</Button>
+                  <FavouriteIcon
+                    style={
+                      favourite
+                        ? {
+                            fill: "red",
+                            height: " 32px",
+                            width: "32px",
+                            color: "red",
+                          }
+                        : { height: " 32px", width: "32px" }
+                    }
+                    onClick={handleFavourite}
+                  />
                 </div>
               )}
             </div>
@@ -85,4 +108,4 @@ const VimeoCard: React.FC<IProps> = ({
   )
 }
 
-export default VimeoCard
+export default React.memo(VimeoCard)

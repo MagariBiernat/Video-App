@@ -1,9 +1,5 @@
 import { combineReducers } from "redux"
-import {
-  savedMoviesType,
-  searchReducerInterface,
-  videoInterface,
-} from "../../utils/interfaces"
+import { searchReducerInterface, videoInterface } from "../../utils/interfaces"
 import moviesReducer from "./moviesReducer"
 import searchReducer from "./searchReducer"
 import errorsReducer from "./errorsReducer"

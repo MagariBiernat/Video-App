@@ -125,7 +125,7 @@ const searchAction =
               })
             })
             .catch((error) => {
-              if (error.message == ERROR_ID_NOT_YOUTUBE)
+              if (error.message === ERROR_ID_NOT_YOUTUBE)
                 fetchData(
                   `https://api.vimeo.com/videos/${checkedUrl?.urlLink}?access_token=${API_KEY_VIMEO}`
                 )
