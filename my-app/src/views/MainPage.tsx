@@ -50,12 +50,16 @@ function MainPage() {
       {movie.loading ? (
         <Spinner
           style={{ width: "10rem", height: "10rem", marginTop: "30px" }}
-          type="grow"
-          color="primary"
+          color="info"
+          children={null}
         />
       ) : (
         <>
-          {error && <h2>Error loading</h2>}
+          {error && (
+            <h2 style={{ marginTop: "120px", fontWeight: 300 }}>
+              Error loading
+            </h2>
+          )}
           {movie?.success && <SearchResultMovie movie={movie} />}
         </>
       )}

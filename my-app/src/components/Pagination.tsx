@@ -23,6 +23,7 @@ const Pagination: React.FC<IProps> = ({
     <Pagin>
       {pages.map((x: number, i) => (
         <PaginationItem
+          style={{ padding: "20px" }}
           active={pageNumber === x + 1 ? true : false}
           onClick={() => setPageNumber(x + 1)}
         >
